@@ -1,0 +1,207 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/row-formatting.schema.json",
+  "hideSelection": true,
+  "hideColumnHeader": true,
+  "rowFormatter": {
+    "elmType": "div",
+    "style": {
+      "height": "=if(@rowIndex == 0, '5em', '2em')",
+      "display": "block",
+      "width": "100%"
+    },
+    "children": [
+      {
+        "elmType": "div",
+        "attributes": {
+          "class": "ms-bgColor-gray20"
+        },
+        "style": {
+          "width": "100%",
+          "display": "=if(@rowIndex == 0, 'flex', 'none')",
+          "height": "2.7em",
+          "padding": ".2em",
+          "font-weight": "bold"
+        },
+        "children": [
+          {
+            "elmType": "div",
+            "txtContent": "Task",
+            "style": {
+              "width": "266px",
+              "text-align": "left",
+              "padding-left": "0.4em",
+              "box-sizing": "border-box"
+            },
+            "attributes": {
+              "class": "ms-fontSize-12"
+            }
+          },
+          {
+            "elmType": "div",
+            "style": {
+              "flex-grow": "1",
+              "height": "100%",
+              "position": "relative"
+            },
+            "attributes": {
+              "class": "ms-fontSize-12"
+            },
+            "children": [
+              {
+                "elmType": "span",
+                "txtContent": "=toLocaleDateString('[$GanttChartStart]')",
+                "style": {
+                  "text-align": "left"
+                }
+              },
+              {
+                "elmType": "span",
+                "txtContent": "=toLocaleDateString([$GanttChartEnd])",
+                "style": {
+                  "position": "absolute",
+                  "right": "0"
+                }
+              },
+              {
+                "elmType": "span",
+                "txtContent": "=toLocaleDateString(@now)",
+                "style": {
+                  "position": "relative",
+                  "width": "100px",
+                  "z-index": "100",
+                  "display": "=if([$GanttChartEnd] < @now , 'none', 'block')",
+                  "left": "=floor((Number(@now)-Number(Date([$GanttChartStart])))/(Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart])))*100 )+'%'"
+                }
+              },
+              {
+                "elmType": "span",
+                "attributes": {
+                  "title": "=(Number(@now)-Number(Date([$GanttChartStart]))) / (Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart]))) * 100 + '%'",
+                  "class": "ms-borderColor-gray"
+                },
+                "style": {
+                  "position": "relative",
+                  "display": "=if([$GanttChartEnd] < @now , 'none', 'block')",
+                  "top": "-2.6em",
+                  "z-index": "100",
+                  "border-left-width": "1px",
+                  "border-left-style": "dotted",
+                  "height": "2.6em",
+                  "width": "1em",
+                  "left": "=(Number(@now)-Number(Date([$GanttChartStart]))) / (Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart]))) * 100 + '%'"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "elmType": "div",
+        "style": {
+          "width": "100%",
+          "display": "flex",
+          "padding": "0.2em"
+        },
+        "children": [
+          {
+            "elmType": "span",
+            "style": {
+              "width": "16px",
+              "padding-top": "0.55em"
+            },
+            "attributes": {
+              "iconName": "=if([$Progress] == 'Completed', 'CompletedSolid', if([$Progress] == 'In progress', 'CircleRing', if([$Progress] == 'Blocked', 'IncidentTriangle', if([$Progress] == 'Behind', 'EventDateMissed12', 'HourGlass'))))",
+              "title": "=if([$DueDate] > [$GanttChartEnd], 'Task is past timeline date range', if([$DueDate] < [$GanttChartStart], 'Task is before timeline date range', [$Progress]))",
+              "class": "='ms-fontSize-13 ms-fontColor-' + if([$Progress] == 'Completed', 'sharedGreen20', if([$Progress] == 'In Progress', 'sharedBlue20', if([$Progress] == 'Blocked', 'sharedOrange10', if([$Progress] == 'Behind', 'sharedRed10', 'sharedGray20'))))"
+            }
+          },
+          {
+            "elmType": "button",
+            "txtContent": "[$Title]",
+            "customRowAction": {
+              "action": "editProps"
+            },
+            "style": {
+              "width": "250px",
+              "max-height": "2em",
+              "padding": "0",
+              "border": "none",
+              "background-color": "transparent",
+              "cursor": "pointer",
+              "text-decoration": "none",
+              "text-align": "left",
+              "outline": "none",
+              "display": "inline-block",
+              "overflow": "hidden",
+              "text-overflow": "ellipsis",
+              "white-space": "nowrap"
+            },
+            "attributes": {
+              "title": "[$Title]",
+              "class": "ms-fontSize-13 ms-fontColor-themePrimary ms-fontColor-themeDarker--hover"
+            }
+          },
+          {
+            "elmType": "div",
+            "style": {
+              "flex-grow": "1",
+              "position": "relative",
+              "height": "2em",
+              "border-style": "dotted",
+              "border-width": "0 0 1px 0"
+            },
+            "attributes": {
+              "class": "ms-borderColor-sharedGray20"
+            },
+            "children": [
+              {
+                "elmType": "div",
+                "txtContent": "=(getMonth([$StartDate])+1) + '/' + getDate([$StartDate])",
+                "style": {
+                  "position": "relative",
+                  "box-sizing": "border-box",
+                  "display": "flex",
+                  "border-radius": "1em",
+                  "z-index": "1",
+                  "top": "0.2em",
+                  "height": "2em",
+                  "overflow": "hidden",
+                  "word-break": "break-word",
+                  "padding": "0.2em 0.4em",
+                  "font-size": "10px",
+                  "line-height": "12px",
+                  "border-width": "1px",
+                  "border-style": "solid",
+                  "left": "=if([$StartDate] > [$GanttChartEnd], '100%', if([$DueDate] < [$GanttChartStart], '0px', if([$StartDate] < [$GanttChartStart], '0px', (Number([$StartDate])-Number(Date([$GanttChartStart]))) / (Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart]))) * 100) + '%'))",
+                  "width": "=if([$StartDate] > [$GanttChartEnd], '40px', if([$DueDate] < [$GanttChartStart], '40px', if([$DueDate] > [$GanttChartEnd], (Number(Date([$GanttChartEnd]))-Number([$StartDate])+ 86400000) / (Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart]))+ 86400000) * 100, (Number([$DueDate])-Number([$StartDate])+ 86400000) / (Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart]))+ 86400000) * 100) + '%'))"
+                },
+                "attributes": {
+                  "title": "=if([$Category]=='','',[$Category] + ' - ') + [$Title] + ' - ' + toLocaleDateString([$StartDate]) + ' - ' + toLocaleDateString([$DueDate])",
+                  "class": "=if([$Progress] == 'Completed', 'ms-borderColor-sharedRCyan30 ms-bgColor-sharedCyan40 ms-fontColor-white', if([$Progress] == 'In progress', 'ms-borderColor-blueMid ms-bgColor-blue ms-fontColor-white', if([$Progress] == 'Blocked', 'ms-borderColor-sharedOrange20 ms-bgColor-sharedOrange10 ms-fontColor-black', if([$Progress] == 'Behind', 'ms-borderColor-sharedRed20 ms-bgColor-sharedRed10 ms-fontColor-white', ''))))"
+                }
+              },
+              {
+                "elmType": "span",
+                "attributes": {
+                  "title": "=toLocaleDateString(@now)",
+                  "class": "ms-borderColor-yellow"
+                },
+                "style": {
+                  "position": "relative",
+                  "display": "=if([$GanttChartEnd] < @now , 'none', 'block')",
+                  "top": "-1.6em",
+                  "z-index": "100",
+                  "border-left-width": "2px",
+                  "border-left-style": "dotted",
+                  "height": "2em",
+                  "width": "1em",
+                  "left": "=(Number(@now)-Number(Date([$GanttChartStart]))) / (Number(Date([$GanttChartEnd]))-Number(Date([$GanttChartStart]))) * 100 + '%'"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
